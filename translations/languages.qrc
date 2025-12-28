@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/languages/translations">
+        <file>piano_tuner_de.qm</file>
+        <file>qt_de.qm</file>
+        <file>piano_tuner_es.qm</file>
+        <file>qt_es.qm</file>
+        <file>piano_tuner_pl.qm</file>
+        <file>qt_pl.qm</file>
+        <file>piano_tuner_pt.qm</file>
+        <file>qt_pt.qm</file>
+        <file>piano_tuner_ko.qm</file>
+        <file>qt_ko.qm</file>
+        <file>piano_tuner_zh.qm</file>
+        <file>qt_zh.qm</file>
+        <file>piano_tuner_ru.qm</file>
+        <file>qt_ru.qm</file>
+        <file>qt_fr.qm</file>
+        <file>piano_tuner_fr.qm</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,887 @@
+{
+  "num_keys": 88,
+  "key_of_a4": 48,
+  "concert_pitch": 440.0,
+  "keys": [
+    {
+      "number": 0,
+      "name": "A0",
+      "theoretical_frequency": 27.5,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 1,
+      "name": "A#0",
+      "theoretical_frequency": 29.13523509488062,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 2,
+      "name": "B0",
+      "theoretical_frequency": 30.86770632850775,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 3,
+      "name": "C1",
+      "theoretical_frequency": 32.70319566257483,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 4,
+      "name": "C#1",
+      "theoretical_frequency": 34.64782887210901,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 5,
+      "name": "D1",
+      "theoretical_frequency": 36.70809598967594,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 6,
+      "name": "D#1",
+      "theoretical_frequency": 38.890872965260115,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 7,
+      "name": "E1",
+      "theoretical_frequency": 41.20344461410875,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 8,
+      "name": "F1",
+      "theoretical_frequency": 43.653528929125486,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 9,
+      "name": "F#1",
+      "theoretical_frequency": 46.2493028389543,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 10,
+      "name": "G1",
+      "theoretical_frequency": 48.999429497718666,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 11,
+      "name": "G#1",
+      "theoretical_frequency": 51.91308719749314,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 12,
+      "name": "A1",
+      "theoretical_frequency": 55.0,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 13,
+      "name": "A#1",
+      "theoretical_frequency": 58.27047018976124,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 14,
+      "name": "B1",
+      "theoretical_frequency": 61.7354126570155,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 15,
+      "name": "C2",
+      "theoretical_frequency": 65.40639132514966,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 16,
+      "name": "C#2",
+      "theoretical_frequency": 69.29565774421802,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 17,
+      "name": "D2",
+      "theoretical_frequency": 73.41619197935188,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 18,
+      "name": "D#2",
+      "theoretical_frequency": 77.78174593052023,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 19,
+      "name": "E2",
+      "theoretical_frequency": 82.4068892282175,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 20,
+      "name": "F2",
+      "theoretical_frequency": 87.30705785825097,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 21,
+      "name": "F#2",
+      "theoretical_frequency": 92.4986056779086,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 22,
+      "name": "G2",
+      "theoretical_frequency": 97.99885899543733,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 23,
+      "name": "G#2",
+      "theoretical_frequency": 103.82617439498628,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 24,
+      "name": "A2",
+      "theoretical_frequency": 110.0,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 25,
+      "name": "A#2",
+      "theoretical_frequency": 116.54094037952248,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 26,
+      "name": "B2",
+      "theoretical_frequency": 123.47082531403103,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 27,
+      "name": "C3",
+      "theoretical_frequency": 130.8127826502993,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 28,
+      "name": "C#3",
+      "theoretical_frequency": 138.59131548843604,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 29,
+      "name": "D3",
+      "theoretical_frequency": 146.8323839587038,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 30,
+      "name": "D#3",
+      "theoretical_frequency": 155.56349186104046,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 31,
+      "name": "E3",
+      "theoretical_frequency": 164.81377845643496,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 32,
+      "name": "F3",
+      "theoretical_frequency": 174.61411571650194,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 33,
+      "name": "F#3",
+      "theoretical_frequency": 184.9972113558172,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 34,
+      "name": "G3",
+      "theoretical_frequency": 195.99771799087463,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 35,
+      "name": "G#3",
+      "theoretical_frequency": 207.65234878997256,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 36,
+      "name": "A3",
+      "theoretical_frequency": 220.0,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 37,
+      "name": "A#3",
+      "theoretical_frequency": 233.08188075904496,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 38,
+      "name": "B3",
+      "theoretical_frequency": 246.94165062806206,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 39,
+      "name": "C4",
+      "theoretical_frequency": 261.6255653005986,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 40,
+      "name": "C#4",
+      "theoretical_frequency": 277.1826309768721,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 41,
+      "name": "D4",
+      "theoretical_frequency": 293.6647679174076,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 42,
+      "name": "D#4",
+      "theoretical_frequency": 311.1269837220809,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 43,
+      "name": "E4",
+      "theoretical_frequency": 329.6275569128699,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 44,
+      "name": "F4",
+      "theoretical_frequency": 349.2282314330039,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 45,
+      "name": "F#4",
+      "theoretical_frequency": 369.9944227116344,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 46,
+      "name": "G4",
+      "theoretical_frequency": 391.99543598174927,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 47,
+      "name": "G#4",
+      "theoretical_frequency": 415.3046975799451,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 48,
+      "name": "A4",
+      "theoretical_frequency": 440.0,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 49,
+      "name": "A#4",
+      "theoretical_frequency": 466.1637615180899,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 50,
+      "name": "B4",
+      "theoretical_frequency": 493.8833012561241,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 51,
+      "name": "C5",
+      "theoretical_frequency": 523.2511306011972,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 52,
+      "name": "C#5",
+      "theoretical_frequency": 554.3652619537442,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 53,
+      "name": "D5",
+      "theoretical_frequency": 587.3295358348151,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 54,
+      "name": "D#5",
+      "theoretical_frequency": 622.2539674441618,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 55,
+      "name": "E5",
+      "theoretical_frequency": 659.2551138257398,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 56,
+      "name": "F5",
+      "theoretical_frequency": 698.4564628660078,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 57,
+      "name": "F#5",
+      "theoretical_frequency": 739.9888454232688,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 58,
+      "name": "G5",
+      "theoretical_frequency": 783.9908719634985,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 59,
+      "name": "G#5",
+      "theoretical_frequency": 830.6093951598903,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 60,
+      "name": "A5",
+      "theoretical_frequency": 880.0,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 61,
+      "name": "A#5",
+      "theoretical_frequency": 932.3275230361799,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 62,
+      "name": "B5",
+      "theoretical_frequency": 987.7666025122483,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 63,
+      "name": "C6",
+      "theoretical_frequency": 1046.5022612023945,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 64,
+      "name": "C#6",
+      "theoretical_frequency": 1108.7305239074883,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 65,
+      "name": "D6",
+      "theoretical_frequency": 1174.6590716696303,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 66,
+      "name": "D#6",
+      "theoretical_frequency": 1244.5079348883237,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 67,
+      "name": "E6",
+      "theoretical_frequency": 1318.5102276514797,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 68,
+      "name": "F6",
+      "theoretical_frequency": 1396.9129257320155,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 69,
+      "name": "F#6",
+      "theoretical_frequency": 1479.9776908465376,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 70,
+      "name": "G6",
+      "theoretical_frequency": 1567.981743926997,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 71,
+      "name": "G#6",
+      "theoretical_frequency": 1661.2187903197805,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 72,
+      "name": "A6",
+      "theoretical_frequency": 1760.0,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 73,
+      "name": "A#6",
+      "theoretical_frequency": 1864.6550460723597,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 74,
+      "name": "B6",
+      "theoretical_frequency": 1975.533205024496,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 75,
+      "name": "C7",
+      "theoretical_frequency": 2093.004522404789,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 76,
+      "name": "C#7",
+      "theoretical_frequency": 2217.4610478149766,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 77,
+      "name": "D7",
+      "theoretical_frequency": 2349.31814333926,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 78,
+      "name": "D#7",
+      "theoretical_frequency": 2489.0158697766474,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 79,
+      "name": "E7",
+      "theoretical_frequency": 2637.02045530296,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 80,
+      "name": "F7",
+      "theoretical_frequency": 2793.825851464031,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 81,
+      "name": "F#7",
+      "theoretical_frequency": 2959.955381693075,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 82,
+      "name": "G7",
+      "theoretical_frequency": 3135.9634878539946,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 83,
+      "name": "G#7",
+      "theoretical_frequency": 3322.437580639561,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 84,
+      "name": "A7",
+      "theoretical_frequency": 3520.0,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 85,
+      "name": "A#7",
+      "theoretical_frequency": 3729.3100921447194,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 86,
+      "name": "B7",
+      "theoretical_frequency": 3951.066410048992,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    },
+    {
+      "number": 87,
+      "name": "C8",
+      "theoretical_frequency": 4186.009044809578,
+      "recorded_frequency": null,
+      "computed_frequency": null,
+      "tuning_deviation": 0.0,
+      "recorded": false,
+      "peaks": []
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>Entropy Piano Tuner</Name>
+    <Version>1.2.0</Version>
+    <Title>Entropy Piano Tuner Installer</Title>
+    <Publisher>TP III Universität Würzburg</Publisher>
+    <ProductUrl>http://piano-tuner.org</ProductUrl>
+    <InstallerWindowIcon>windowicon</InstallerWindowIcon>
+    <InstallerApplicationIcon>appicon</InstallerApplicationIcon>
+    <Logo>logo.png</Logo>
+    <AllowSpaceInPath>true</AllowSpaceInPath>
+    <RunProgram>@TargetDir@/entropypianotuner</RunProgram>
+    <StartMenuDir>Entropy Piano Tuner</StartMenuDir>
+    <TargetDir>@HomeDir@/EntropyPianoTuner</TargetDir>
+	<AdminTargetDir>@ApplicationsDir@/EntropyPianoTuner</AdminTargetDir>
+    <RemoteRepositories>
+        <Repository>
+            <Url>http://download.piano-tuner.org/Resources/Public/Downloads/Repository/dummy_repository</Url>
+            <Enabled>1</Enabled>
+            <DisplayName>Base repository</DisplayName>
+        </Repository>
+    </RemoteRepositories>
+</Installer>

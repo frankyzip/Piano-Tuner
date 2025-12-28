@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>Entropy Piano Tuner</DisplayName>
+    <Description>Install the Entropy Pinano Tuner core components.</Description>
+    <Version>1.2.0</Version>
+    <ReleaseDate>2017-03-24</ReleaseDate>
+    <Name>org.entropytuner.app</Name>
+    <Licenses>
+        <License name="GNU General Public License v3.0" file="LICENSE" />
+    </Licenses>
+    <Translations>
+    </Translations>
+    <Default>true</Default>
+    <Script>installscript.qs</Script>
+    <ForcedInstallation>true</ForcedInstallation>
+</Package>

@@ -1,0 +1,88 @@
+# Resource object code (Python 3)
+# Created by: object code
+# Created by: The Resource Compiler for Qt version 6.9.1
+# WARNING! All changes made in this file will be lost!
+
+from PySide6 import QtCore
+
+qt_resource_data = b"\
+\x00\x00\x03\x06\
+<\
+?xml version=\x221.\
+0\x22?>\x0a<algorithm \
+year=\x222015\x22 auth\
+or=\x22Haye Hinrich\
+sen\x22>\x0a    <name>\
+\x0a        <string\
+>Pitch Raise</st\
+ring>\x0a        <s\
+tring lang=\x22de\x22>\
+Frequenzanhebung\
+ (pitch raise)</\
+string>\x0a        \
+<string lang=\x22zh\
+\x22>\xe9\x9f\xb3\xe9\xab\x98\xe6\x8b\x89\xe5\x8d\x87</\
+string>\x0a    </na\
+me>\x0a    <descrip\
+tion>\x0a        <s\
+tring>This algor\
+ithm generates a\
+n approximate tu\
+ning which is ne\
+eded for a pitch\
+ raise. For deta\
+ils please refer\
+ to the user man\
+ual.</string>\x0a  \
+      <string la\
+ng=\x22de\x22>Dieser A\
+lgorithmus erzeu\
+gt eine ungef\xc3\xa4h\
+re Stimmkurve, d\
+ie man f\xc3\xbcr eine\
+ Frequenzanhebun\
+g (pitch raise) \
+ben\xc3\xb6tigt. Einze\
+lheiten dazu fin\
+den Sie in der B\
+edienungsanleitu\
+ng.</string>\x0a   \
+     <string lan\
+g=\x22zh\x22>\xe6\x9c\xac\xe7\xae\x97\xe6\xb3\x95\
+\xe4\xb8\xba\xe9\x9f\xb3\xe9\xab\x98\xe6\x8b\x89\xe5\x8d\x87\xe4\
+\xba\xa7\xe7\x94\x9f\xe4\xb8\x80\xe6\x9d\xa1\xe8\xbf\x91\xe4\xbc\
+\xbc\xe7\x9a\x84\xe8\xb0\x83\xe5\xbe\x8b\xe6\x9b\xb2\xe7\xba\xbf\
+\xef\xbc\x8c\xe8\xaf\xb7\xe8\xaf\xa6\xe8\xa7\x81\xe7\x94\xa8\xe6\
+\x88\xb7\xe6\x89\x8b\xe5\x86\x8c\xe3\x80\x82</str\
+ing>\x0a    </descr\
+iption>\x0a</algori\
+thm>\x0a\
+"
+
+qt_resource_name = b"\
+\x00\x0a\
+\x06\x9d\xaa\x83\
+\x00a\
+\x00l\x00g\x00o\x00r\x00i\x00t\x00h\x00m\x00s\
+\x00\x0e\
+\x01\xc7\xb2|\
+\x00p\
+\x00i\x00t\x00c\x00h\x00r\x00a\x00i\x00s\x00e\x00.\x00x\x00m\x00l\
+"
+
+qt_resource_struct = b"\
+\x00\x00\x00\x00\x00\x02\x00\x00\x00\x01\x00\x00\x00\x01\
+\x00\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x02\x00\x00\x00\x01\x00\x00\x00\x02\
+\x00\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x1a\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
+\x00\x00\x01^\x09r?\xe0\
+"
+
+def qInitResources():
+    QtCore.qRegisterResourceData(0x03, qt_resource_struct, qt_resource_name, qt_resource_data)
+
+def qCleanupResources():
+    QtCore.qUnregisterResourceData(0x03, qt_resource_struct, qt_resource_name, qt_resource_data)
+
+qInitResources()

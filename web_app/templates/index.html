@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entropy Piano Tuner - Web Interface</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            padding: 15px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Mode Selection */
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .mode-btn.active {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+        }
+
+        .mode-idle { background: #e0e0e0; color: #666; }
+        .mode-idle.active { background: #9e9e9e; color: white; }
+
+        .mode-recording { background: #ff5252; color: white; }
+        .mode-recording.active { background: #d32f2f; }
+
+        .mode-calculating { background: #ffa726; color: white; }
+        .mode-calculating.active { background: #f57c00; }
+
+        .mode-tuning { background: #66bb6a; color: white; }
+        .mode-tuning.active { background: #388e3c; }
+
+        /* Main Content Area */
+        .content-area {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .control-section {
+            margin-bottom: 15px;
+        }
+
+        .control-section h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 6px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateX(5px);
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #764ba2;
+            color: white;
+        }
+
+        .btn-success {
+            background: #66bb6a;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ff5252;
+            color: white;
+        }
+
+        .info-box {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.8em;
+            margin-bottom: 3px;
+        }
+
+        .info-value {
+            font-size: 1.1em;
+            color: #333;
+            font-weight: 700;
+        }
+
+        /* Main Display */
+        .main-display {
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 400px;
+        }
+
+        /* Piano Keyboard */
+        .keyboard-container {
+            margin-bottom: 15px;
+            overflow: hidden;
+            padding: 10px 0;
+            width: 100%;
+        }
+
+        .keyboard {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            height: 120px;
+            position: relative;
+        }
+
+        .key {
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            border: 1px solid #333;
+            flex-shrink: 0;
+        }
+
+        .key.white {
+            background: white;
+            flex: 1;
+            height: 100px;
+            border-radius: 0 0 3px 3px;
+            z-index: 1;
+        }
+
+        .key.black {
+            background: #333;
+            width: 1.5%;
+            height: 65px;
+            border-radius: 0 0 2px 2px;
+            margin-left: -0.75%;
+            margin-right: -0.75%;
+            z-index: 2;
+        }
+
+        .key:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+
+        .key.selected {
+            box-shadow: 0 0 0 4px #667eea;
+        }
+
+        .key.recorded {
+            background: linear-gradient(to bottom, #66bb6a 0%, white 30%);
+        }
+
+        .key.black.recorded {
+            background: linear-gradient(to bottom, #66bb6a 0%, #333 30%);
+        }
+
+        .key-label {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7em;
+            font-weight: 600;
+        }
+
+        .key.white .key-label {
+            color: #333;
+        }
+
+        .key.black .key-label {
+            color: white;
+        }
+
+        /* Frequency Display */
+        .frequency-display {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .frequency-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .deviation {
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        .deviation.positive {
+            color: #ff5252;
+        }
+
+        .deviation.negative {
+            color: #2196f3;
+        }
+
+        .deviation.perfect {
+            color: #66bb6a;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Algorithm Selector */
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .status-info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-left: 4px solid #2196f3;
+        }
+
+        .status-success {
+            background: #e8f5e9;
+            color: #388e3c;
+            border-left: 4px solid #66bb6a;
+        }
+
+        .status-error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #ff5252;
+        }
+
+        /* Recording Indicator */
+        .recording-indicator {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: #ff5252;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .recording-indicator.active {
+            display: flex;
+        }
+
+        .pulse {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .content-area {
+                grid-template-columns: 1fr;
+            }
+
+            .keyboard {600px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Compact laptop screens */
+        @media (max-height: 800px) {
+            body {
+                padding: 5px;
+            }
+            .container {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+            .keyboard {
+                height: 120px;
+            }
+            .key.white {
+                height: 110px;
+            }
+            .key.black {
+                height: 70px
+                font-size: 1.8em;
+            }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎹 Entropy Piano Tuner</h1>
+            <p class="subtitle">Professionele piano stemming met moderne technologie</p>
+        </header>
+
+        <!-- Mode Selector -->
+        <div class="mode-selector">
+            <button class="mode-btn mode-idle active" onclick="setMode('idle')">
+                🛑 Idle
+            </button>
+            <button class="mode-btn mode-recording" onclick="setMode('recording')">
+                🎤 Opnemen
+            </button>
+            <button class="mode-btn mode-calculating" onclick="setMode('calculating')">
+                🧮 Berekenen
+            </button>
+            <button class="mode-btn mode-tuning" onclick="setMode('tuning')">
+                🎵 Stemmen
+            </button>
+        </div>
+
+        <!-- Recording Indicator -->
+        <div class="recording-indicator" id="recordingIndicator">
+            <span class="pulse">● OPNAME BEZIG...</span>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-area">
+            <!-- Sidebar Controls -->
+            <div class="sidebar">
+                <div class="control-section">
+                    <h3>Geselecteerde Toets</h3>
+                    <div class="info-box">
+                        <div class="info-label">Noot</div>
+                        <div class="info-value" id="selectedNote">-</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Toets Nummer</div>
+                        <div class="info-value" id="selectedKeyNumber">-</div>
+                    </div>
+                </div>
+
+                <div class="control-section" id="recordingControls">
+                    <h3>Opname</h3>
+                    <button class="btn btn-danger" onclick="startRecording()">
+                        🎤 Start Opname
+                    </button>
+                    <button class="btn btn-secondary" onclick="playRecorded()">
+                        ▶️ Afspelen (Opgenomen)
+                    </button>
+                </div>
+
+                <div class="control-section" id="calculationControls">
+                    <h3>Berekening</h3>
+                    <select id="algorithmSelect">
+                        <option value="equal_temperament">Equal Temperament</option>
+                        <option value="inharmonicity" selected>Inharmonicity Tuning (Aanbevolen)</option>
+                        <option value="copy_recording">Kopieer Opname</option>
+                        <option value="stretch_tuning">Stretch Tuning</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="startCalculation()">
+                        🧮 Start Berekening
+                    </button>
+                </div>
+
+                <div class="control-section" id="tuningControls">
+                    <h3>Stemmen</h3>
+                    <button class="btn btn-success" onclick="playComputed()">
+                        ▶️ Speel Referentie
+                    </button>
+                    <button class="btn btn-secondary" onclick="playTheoretical()">
+                        ▶️ Speel Theoretisch
+                    </button>
+                </div>
+
+                <div class="control-section">
+                    <h3>Sessie</h3>
+                    <button class="btn btn-primary" onclick="saveSession()">
+                        💾 Opslaan
+                    </button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+                        📂 Laden
+                    </button>
+                    <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="loadSessionFromFile(event)">
+                </div>
+            </div>
+
+            <!-- Main Display -->
+            <div class="main-display">
+                <h2 style="margin-bottom: 20px; color: #667eea;">Piano Keyboard</h2>
+                
+                <!-- Piano Keyboard -->
+                <div class="keyboard-container">
+                    <div class="keyboard" id="keyboard"></div>
+                </div>
+
+                <!-- Frequency Display -->
+                <div class="frequency-display">
+                    <h3 style="color: #666;">Frequentie Informatie</h3>
+                    <div class="frequency-value" id="frequencyDisplay">---</div>
+                    <div class="deviation" id="deviationDisplay">---</div>
+                    <div style="margin-top: 20px; color: #666;">
+                        <div>Theoretisch: <span id="theoreticalFreq">---</span> Hz</div>
+                        <div>Opgenomen: <span id="recordedFreq">---</span> Hz</div>
+                        <div>Berekend: <span id="computedFreq">---</span> Hz</div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-container" id="progressContainer" style="display: none;">
+                    <h3 style="margin-bottom: 10px; color: #667eea;">Voortgang</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%;">0%</div>
+                    </div>
+                </div>
+
+                <!-- Status Messages -->
+                <div id="statusMessages"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        let currentMode = 'idle';
+        let selectedKey = null;
+        let pianoData = null;
+
+        // Initialize
+        socket.on('connect', () => {
+            console.log('Connected to server');
+            loadPianoData();
+        });
+
+        socket.on('connected', (data) => {
+            currentMode = data.mode;
+            pianoData = data.piano_data;
+            renderKeyboard();
+        });
+
+        // Load piano data
+        async function loadPianoData() {
+            try {
+                const response = await fetch('/api/piano_data');
+                pianoData = await response.json();
+                renderKeyboard();
+            } catch (error) {
+                showStatus('error', 'Fout bij laden piano data: ' + error.message);
+            }
+        }
+
+        // Render piano keyboard
+        function renderKeyboard() {
+            const keyboard = document.getElementById('keyboard');
+            keyboard.innerHTML = '';
+
+            if (!pianoData) return;
+
+            // Black keys are: A#(1), C#(4), D#(6), F#(9), G#(11)
+            const blackKeyPositions = [1, 4, 6, 9, 11];
+
+            pianoData.keys.forEach((key, index) => {
+                const noteInOctave = index % 12;
+                const isBlack = blackKeyPositions.includes(noteInOctave);
+
+                const keyElement = document.createElement('div');
+                keyElement.className = `key ${isBlack ? 'black' : 'white'}`;
+                if (key.recorded) keyElement.classList.add('recorded');
+                if (selectedKey === index) keyElement.classList.add('selected');
+
+                keyElement.onclick = () => selectKey(index);
+
+                // Show label only for A keys (index % 12 === 0)
+                if (!isBlack && noteInOctave === 0) {
+                    const label = document.createElement('div');
+                    label.className = 'key-label';
+                    label.textContent = key.name;
+                    keyElement.appendChild(label);
+                }
+
+                keyboard.appendChild(keyElement);
+            });
+        }
+
+        // Select a key
+        async function selectKey(keyNumber) {
+            selectedKey = keyNumber;
+            const key = pianoData.keys[keyNumber];
+
+            document.getElementById('selectedNote').textContent = key.name;
+            document.getElementById('selectedKeyNumber').textContent = keyNumber + 1;
+            document.getElementById('theoreticalFreq').textContent = key.theoretical_frequency.toFixed(2);
+            document.getElementById('recordedFreq').textContent = key.recorded_frequency ? key.recorded_frequency.toFixed(2) : '---';
+            document.getElementById('computedFreq').textContent = key.computed_frequency ? key.computed_frequency.toFixed(2) : '---';
+
+            if (key.recorded_frequency) {
+                document.getElementById('frequencyDisplay').textContent = key.recorded_frequency.toFixed(2) + ' Hz';
+                updateDeviation(key.tuning_deviation);
+            } else {
+                document.getElementById('frequencyDisplay').textContent = '---';
+                document.getElementById('deviationDisplay').textContent = '---';
+            }
+
+            renderKeyboard();
+
+            try {
+                await fetch('/api/select_key', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key_number: keyNumber })
+                });
+            } catch (error) {
+                showStatus('error', 'Fout bij selecteren toets: ' + error.message);
+            }
+        }
+
+        // Update deviation display
+        function updateDeviation(cents) {
+            const devDisplay = document.getElementById('deviationDisplay');
+            const absCents = Math.abs(cents);
+
+            if (absCents < 5) {
+                devDisplay.className = 'deviation perfect';
+                devDisplay.textContent = '✓ Perfect gestemd!';
+            } else if (cents > 0) {
+                devDisplay.className = 'deviation positive';
+                devDisplay.textContent = `+${cents.toFixed(1)} cents (te hoog)`;
+            } else {
+                devDisplay.className = 'deviation negative';
+                devDisplay.textContent = `${cents.toFixed(1)} cents (te laag)`;
+            }
+        }
+
+        // Set mode
+        async function setMode(mode) {
+            try {
+                const response = await fetch('/api/mode', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mode })
+                });
+
+                if (response.ok) {
+                    currentMode = mode;
+                    updateModeUI();
+                    showStatus('info', `Modus gewijzigd naar: ${getModeLabel(mode)}`);
+                }
+            } catch (error) {
+                showStatus('error', 'Fout bij wijzigen modus: ' + error.message);
+            }
+        }
+
+        // Update mode UI
+        function updateModeUI() {
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.mode-${currentMode}`).classList.add('active');
+
+            // Show/hide relevant controls
+            document.getElementById('recordingControls').style.display = 
+                currentMode === 'recording' ? 'block' : 'none';
+            document.getElementById('calculationControls').style.display = 
+                currentMode === 'calculating' ? 'block' : 'none';
+            document.getElementById('tuningControls').style.display = 
+                currentMode === 'tuning' ? 'block' : 'none';
+        }
+
+        function getModeLabel(mode) {
+            const labels = {
+                'idle': 'Idle',
+                'recording': 'Opnemen',
+                'calculating': 'Berekenen',
+                'tuning': 'Stemmen'
+            };
+            return labels[mode] || mode;
+        }
+
+        // Start recording
+        async function startRecording() {
+            if (selectedKey === null) {
+                showStatus('error', 'Selecteer eerst een toets!');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/start_recording', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    document.getElementById('recordingIndicator').classList.add('active');
+                    showStatus('info', 'Opname gestart... Speel de toets!');
+                }
+            } catch (error) {
+                showStatus('error', 'Fout bij starten opname: ' + error.message);
+            }
+        }
+
+        // Start calculation
+        async function startCalculation() {
+            const algorithm = document.getElementById('algorithmSelect').value;
+
+            try {
+                const response = await fetch('/api/calculate_tuning', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ algorithm })
+                });
+
+                if (response.ok) {
+                    document.getElementById('progressContainer').style.display = 'block';
+                    showStatus('info', 'Berekening gestart...');
+                }
+            } catch (error) {
+                showStatus('error', 'Fout bij starten berekening: ' + error.message);
+            }
+        }
+
+        // Play tones
+        async function playComputed() {
+            await playTone(true);
+        }
+
+        async function playTheoretical() {
+            await playTone(false);
+        }
+
+        async function playRecorded() {
+            await playTone(false);
+        }
+
+        async function playTone(useComputed) {
+            if (selectedKey === null) {
+                showStatus('error', 'Selecteer eerst een toets!');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/play_tone', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        key_number: selectedKey,
+                        use_computed: useComputed
+                    })
+                });
+
+                if (response.ok) {
+                    showStatus('info', 'Toon wordt afgespeeld...');
+                }
+            } catch (error) {
+                showStatus('error', 'Fout bij afspelen toon: ' + error.message);
+            }
+        }
+
+        // Save/Load session
+        async function saveSession() {
+            try {
+                const response = await fetch('/api/save_session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    showStatus('success', 'Sessie opgeslagen: ' + data.filename);
+                }
+            } catch (error) {
+                showStatus('error', 'Fout bij opslaan: ' + error.message);
+            }
+        }
+
+        async function loadSessionFromFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            try {
+                const text = await file.text();
+                const jsonData = JSON.parse(text);
+                
+                // Send to server to update session
+                const response = await fetch('/api/load_session_data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: jsonData })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    pianoData = result.data;
+                    renderKeyboard();
+                    showStatus('success', `Sessie geladen: ${file.name}`);
+                }
+            } catch (error) {
+                showStatus('error', 'Fout bij laden bestand: ' + error.message);
+            }
+            
+            // Reset input so same file can be loaded again
+            event.target.value = '';
+        }
+
+        // Socket.IO event handlers
+        socket.on('recording_started', () => {
+            document.getElementById('recordingIndicator').classList.add('active');
+        });
+
+        socket.on('recording_completed', (data) => {
+            document.getElementById('recordingIndicator').classList.remove('active');
+            pianoData.keys[data.key_number].recorded = true;
+            pianoData.keys[data.key_number].recorded_frequency = data.frequency;
+            pianoData.keys[data.key_number].tuning_deviation = data.deviation;
+            renderKeyboard();
+            if (selectedKey === data.key_number) {
+                selectKey(selectedKey);
+            }
+            showStatus('success', `Opname voltooid: ${data.frequency.toFixed(2)} Hz`);
+        });
+
+        socket.on('recording_error', (data) => {
+            document.getElementById('recordingIndicator').classList.remove('active');
+            showStatus('error', 'Opname fout: ' + data.error);
+        });
+
+        socket.on('calculation_started', () => {
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('progressFill').textContent = '0%';
+        });
+
+        socket.on('calculation_progress', (data) => {
+            const progress = Math.round(data.progress);
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressFill').textContent = progress + '%';
+        });
+
+        socket.on('calculation_completed', (data) => {
+            document.getElementById('progressContainer').style.display = 'none';
+            if (data && data.data) {
+                pianoData = data.data;
+                renderKeyboard();
+                // Refresh selected key display if a key is selected
+                if (selectedKey !== null) {
+                    selectKey(selectedKey);
+                }
+            } else {
+                loadPianoData();
+            }
+            showStatus('success', 'Berekening voltooid!');
+        });
+
+        socket.on('calculation_error', (data) => {
+            document.getElementById('progressContainer').style.display = 'none';
+            showStatus('error', 'Berekening fout: ' + data.error);
+        });
+
+        // Show status message
+        function showStatus(type, message) {
+            const container = document.getElementById('statusMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `status-message status-${type}`;
+            messageDiv.textContent = message;
+            container.appendChild(messageDiv);
+
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        // Initialize UI
+        updateModeUI();
+    </script>
+</body>
+</html>

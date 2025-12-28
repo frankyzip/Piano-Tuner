@@ -1,0 +1,43 @@
+# temporary files
+*~
+*.bak
+*.swp
+*.gen
+
+# hidden files
+*.db
+*.DS_Store
+
+# user files
+*.user
+*.user.*
+
+# codeblocks files
+*.layout
+*.depend
+
+# android studio files
+*.iml
+
+# keystores and secret keys
+*.keystore
+*.mobileprovision
+
+# generated files
+dependencies
+*.pdf
+docs/doxy*
+docs/html*
+docs/latex*
+*.autosave
+log
+publish
+.publish*
+.directory
+
+
+# archies
+*.tar.gz
+/docs/*
+/platforms/android/gradle.properties
+/platforms/android/local.properties
