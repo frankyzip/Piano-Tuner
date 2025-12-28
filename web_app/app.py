@@ -9,6 +9,8 @@ import numpy as np
 import sounddevice as sd
 from scipy import signal
 from scipy.fft import rfft, rfftfreq
+from scipy.optimize import minimize, differential_evolution
+from scipy.ndimage import gaussian_filter1d
 import json
 import os
 from datetime import datetime
@@ -79,6 +81,309 @@ class PianoTuner:
         if 0 <= key_number < len(self.piano_data['keys']):
             return self.piano_data['keys'][key_number]
         return None
+    
+    def calculate_entropy_tuning_curve(self, socketio_emit=None):
+        """
+        Calculate optimal tuning curve using Entropy Minimization Algorithm.
+        
+        This method implements the core algorithm from the Entropy Piano Tuner (EPT).
+        The goal is to minimize the entropy of the combined power spectrum of all piano keys.
+        
+        Theory:
+        - Each piano string produces partials (harmonics) with slight inharmonicity
+        - When keys are tuned optimally, their partials align and create consonance
+        - Entropy S = -Σ P(x)·ln(P(x)) measures the "disorder" in the spectrum
+        - Lower entropy = more aligned partials = better consonance
+        
+        Args:
+            socketio_emit: Function to emit progress updates (optional)
+        """
+        
+        def emit_progress(progress, message=""):
+            """Helper to emit progress updates"""
+            if socketio_emit:
+                socketio_emit('calculation_progress', {
+                    'progress': progress,
+                    'message': message
+                })
+        
+        emit_progress(0, "Initializing entropy calculation...")
+        
+        # Step 1: Collect all recorded keys with spectral data
+        recorded_keys = []
+        for i, key in enumerate(self.piano_data['keys']):
+            if key['recorded'] and key['peaks'] and len(key['peaks']) > 0:
+                recorded_keys.append(i)
+        
+        if len(recorded_keys) < 5:
+            # Not enough data for entropy minimization, fall back to theoretical
+            emit_progress(100, "Insufficient data - using equal temperament")
+            for key in self.piano_data['keys']:
+                key['computed_frequency'] = key['theoretical_frequency']
+                key['tuning_deviation'] = 0.0
+            return
+        
+        emit_progress(5, f"Found {len(recorded_keys)} recorded keys")
+        
+        # Step 2: Extract inharmonicity coefficients from peaks
+        inharmonicity_coefficients = self._estimate_inharmonicity_coefficients()
+        emit_progress(10, "Estimated inharmonicity coefficients")
+        
+        # Step 3: Set up optimization problem
+        # We'll optimize the tuning offset (in cents) for each key
+        # Constraint: A4 stays fixed, smooth curve, stay close to equal temperament
+        
+        a4_index = self.piano_data['key_of_a4']
+        
+        # Initial guess: all keys at equal temperament (offset = 0 cents)
+        initial_offsets = np.zeros(88)
+        
+        # Bounds: limit deviations to ±50 cents from equal temperament
+        bounds = [(-50, 50) for _ in range(88)]
+        
+        # A4 must stay at 0 cents (fixed at concert pitch)
+        bounds[a4_index] = (0, 0)
+        
+        emit_progress(15, "Setting up optimization problem...")
+        
+        # Step 4: Define the objective function (entropy calculation)
+        def objective_function(offsets_cents):
+            """
+            Calculate total entropy for given tuning offsets.
+            
+            Args:
+                offsets_cents: Array of 88 tuning offsets in cents from equal temperament
+            
+            Returns:
+                float: Total entropy value (to be minimized)
+            """
+            # Convert offsets to frequency multipliers
+            frequency_multipliers = 2.0 ** (offsets_cents / 1200.0)
+            
+            # Create combined spectrum with all partials
+            # Use a frequency grid from 20 Hz to 10 kHz
+            freq_min, freq_max = 20.0, 10000.0
+            freq_resolution = 0.1  # Hz
+            freq_grid = np.arange(freq_min, freq_max, freq_resolution)
+            
+            # Accumulate power spectrum
+            total_spectrum = np.zeros_like(freq_grid)
+            
+            for key_idx in recorded_keys:
+                key = self.piano_data['keys'][key_idx]
+                base_freq = key['theoretical_frequency'] * frequency_multipliers[key_idx]
+                
+                # Get peaks (partials)
+                peaks = key['peaks']
+                if not peaks:
+                    continue
+                
+                # Estimate fundamental and partial ratios from recorded data
+                recorded_fund = key['recorded_frequency']
+                if recorded_fund is None or recorded_fund <= 0:
+                    continue
+                
+                # Add each partial to the spectrum
+                for peak in peaks:
+                    peak_freq_recorded = peak['frequency']
+                    peak_magnitude = peak['magnitude']
+                    
+                    # Calculate partial number and inharmonicity shift
+                    partial_ratio = peak_freq_recorded / recorded_fund
+                    
+                    # Apply the tuning offset to this partial
+                    adjusted_peak_freq = base_freq * partial_ratio
+                    
+                    # Add this partial as a narrow peak (Gaussian) to the spectrum
+                    # Width depends on the partial number (higher partials have more width)
+                    peak_width = 0.5 + 0.1 * partial_ratio  # Hz
+                    
+                    # Find the nearest grid point
+                    freq_idx = np.searchsorted(freq_grid, adjusted_peak_freq)
+                    if 0 < freq_idx < len(freq_grid):
+                        # Add Gaussian-shaped peak
+                        sigma = peak_width / freq_resolution
+                        gaussian_range = int(5 * sigma)
+                        start_idx = max(0, freq_idx - gaussian_range)
+                        end_idx = min(len(freq_grid), freq_idx + gaussian_range)
+                        
+                        x = np.arange(start_idx, end_idx)
+                        gaussian = peak_magnitude * np.exp(-0.5 * ((x - freq_idx) / sigma) ** 2)
+                        total_spectrum[start_idx:end_idx] += gaussian
+            
+            # Normalize spectrum to create a probability distribution
+            spectrum_sum = np.sum(total_spectrum)
+            if spectrum_sum > 0:
+                P = total_spectrum / spectrum_sum
+            else:
+                return 1e10  # Very high entropy if no spectrum
+            
+            # Calculate entropy: S = -Σ P(x)·ln(P(x))
+            # Avoid log(0) by filtering out zero probabilities
+            P_nonzero = P[P > 1e-12]
+            entropy = -np.sum(P_nonzero * np.log(P_nonzero))
+            
+            # Add regularization terms to enforce constraints
+            
+            # 1. Smoothness penalty: penalize large jumps between adjacent keys
+            smoothness_penalty = np.sum(np.diff(offsets_cents) ** 2) * 0.01
+            
+            # 2. Equal temperament proximity: penalize large deviations from ET
+            et_penalty = np.sum(offsets_cents ** 2) * 0.001
+            
+            total_cost = entropy + smoothness_penalty + et_penalty
+            
+            return total_cost
+        
+        emit_progress(20, "Starting optimization...")
+        
+        # Step 5: Run optimization
+        # Use differential_evolution for global optimization
+        # This is more robust than local minimizers for this type of problem
+        
+        try:
+            result = differential_evolution(
+                objective_function,
+                bounds,
+                maxiter=50,  # Limit iterations for reasonable runtime
+                popsize=10,
+                tol=0.01,
+                workers=1,
+                updating='deferred',
+                callback=lambda xk, convergence: emit_progress(
+                    20 + int(60 * min(1.0, convergence)),
+                    "Optimizing tuning curve..."
+                )
+            )
+            
+            optimal_offsets = result.x
+            emit_progress(80, "Optimization complete")
+            
+        except Exception as e:
+            emit_progress(80, f"Optimization failed: {str(e)}, using fallback")
+            # Fallback: smooth interpolation of recorded deviations
+            optimal_offsets = self._fallback_smooth_tuning(recorded_keys)
+        
+        # Step 6: Apply smoothing to the result for better curve
+        optimal_offsets = gaussian_filter1d(optimal_offsets, sigma=1.5)
+        
+        # Ensure A4 is exactly at 0
+        optimal_offsets[a4_index] = 0.0
+        
+        emit_progress(85, "Applying tuning curve...")
+        
+        # Step 7: Update piano data with computed frequencies
+        for i, key in enumerate(self.piano_data['keys']):
+            # Calculate the tuned frequency
+            offset_cents = optimal_offsets[i]
+            frequency_multiplier = 2.0 ** (offset_cents / 1200.0)
+            computed_freq = key['theoretical_frequency'] * frequency_multiplier
+            
+            key['computed_frequency'] = round(computed_freq, 2)
+            key['tuning_frequency'] = round(computed_freq, 2)
+            
+            # Calculate deviation from recorded frequency (if available)
+            if key['recorded_frequency'] and key['recorded_frequency'] > 0:
+                deviation_cents = 1200 * np.log2(key['recorded_frequency'] / computed_freq)
+                key['tuning_deviation'] = round(deviation_cents, 2)
+            else:
+                key['tuning_deviation'] = round(offset_cents, 2)
+        
+        emit_progress(100, "Entropy tuning calculation complete")
+    
+    def _estimate_inharmonicity_coefficients(self):
+        """
+        Estimate inharmonicity coefficient for each key based on recorded peaks.
+        
+        Inharmonicity coefficient B relates to how much partials deviate from
+        perfect harmonics: f_n = n·f_0·√(1 + B·n²)
+        
+        Returns:
+            dict: {key_index: inharmonicity_coefficient}
+        """
+        inharmonicity = {}
+        
+        for i, key in enumerate(self.piano_data['keys']):
+            if not key['recorded'] or not key['peaks'] or len(key['peaks']) < 2:
+                inharmonicity[i] = 0.0
+                continue
+            
+            recorded_fund = key['recorded_frequency']
+            if recorded_fund is None or recorded_fund <= 0:
+                inharmonicity[i] = 0.0
+                continue
+            
+            # Analyze peaks to estimate inharmonicity
+            # For each peak, calculate what partial number it likely represents
+            B_estimates = []
+            
+            for peak in key['peaks'][:5]:  # Use up to 5 strongest peaks
+                peak_freq = peak['frequency']
+                # Estimate partial number (approximate)
+                n = round(peak_freq / recorded_fund)
+                
+                if n >= 2 and n <= 10:  # Only use reasonable partial numbers
+                    # Solve for B: peak_freq = n·fund·√(1 + B·n²)
+                    # B = (1/n²)·[(peak_freq/(n·fund))² - 1]
+                    ratio = peak_freq / (n * recorded_fund)
+                    if ratio > 1.0:  # Inharmonicity makes partials sharp
+                        B = (1.0 / n**2) * (ratio**2 - 1.0)
+                        if 0 < B < 0.01:  # Reasonable range for piano inharmonicity
+                            B_estimates.append(B)
+            
+            # Average the estimates
+            if B_estimates:
+                inharmonicity[i] = np.median(B_estimates)
+            else:
+                inharmonicity[i] = 0.0001  # Small default value
+            
+            # Store in key data
+            key['inharmonicity'] = inharmonicity[i]
+        
+        return inharmonicity
+    
+    def _fallback_smooth_tuning(self, recorded_keys):
+        """
+        Fallback method: create smooth tuning curve by interpolating recorded deviations.
+        
+        Args:
+            recorded_keys: List of key indices that have been recorded
+        
+        Returns:
+            np.array: Tuning offsets in cents for all 88 keys
+        """
+        # Get recorded deviations
+        recorded_deviations = []
+        recorded_indices = []
+        
+        for key_idx in recorded_keys:
+            key = self.piano_data['keys'][key_idx]
+            if key['recorded_frequency'] and key['theoretical_frequency']:
+                deviation = 1200 * np.log2(
+                    key['recorded_frequency'] / key['theoretical_frequency']
+                )
+                recorded_deviations.append(deviation)
+                recorded_indices.append(key_idx)
+        
+        if len(recorded_indices) < 2:
+            return np.zeros(88)
+        
+        # Interpolate to all 88 keys
+        all_indices = np.arange(88)
+        interpolated = np.interp(
+            all_indices,
+            recorded_indices,
+            recorded_deviations
+        )
+        
+        # Apply smoothing
+        smoothed = gaussian_filter1d(interpolated, sigma=2.0)
+        
+        # Ensure A4 is at 0
+        a4_index = self.piano_data['key_of_a4']
+        smoothed[a4_index] = 0.0
+        
+        return smoothed
 
 # Global tuner instance
 tuner = PianoTuner()
@@ -220,7 +525,11 @@ def calculate_tuning_curve(algorithm='equal_temperament'):
     socketio.emit('calculation_started', {'algorithm': algorithm})
     
     try:
-        if algorithm == 'equal_temperament':
+        if algorithm == 'entropy_minimization':
+            # Entropy Minimization Algorithm (EPT method)
+            tuner.calculate_entropy_tuning_curve(socketio_emit=socketio.emit)
+        
+        elif algorithm == 'equal_temperament':
             # Equal temperament: use theoretical frequencies
             total_keys = len(tuner.piano_data['keys'])
             for i, key in enumerate(tuner.piano_data['keys']):
